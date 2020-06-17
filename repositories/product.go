@@ -9,6 +9,7 @@ import (
 type ProductRepository interface {
 	Repository
 
+	GetProducts() (*[]models.Product, error)
 	GetProductByCode(code string) (*models.Product, error)
 }
 
@@ -21,6 +22,15 @@ func NewProductRepository() ProductRepository {
 	productRepo.CollectionName = dbs.CollectionProduct
 
 	return &productRepo
+}
+
+func (p *productRepository) GetProducts() (*[]models.Product, error) {
+	var product []models.Product
+	err := dbs.Database.FindMany(dbs.CollectionProduct, nil, "", &product)
+	if err != nil {
+		return nil, err
+	}
+	return &product, nil
 }
 
 func (p *productRepository) GetProductByCode(code string) (*models.Product, error) {
