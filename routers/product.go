@@ -8,6 +8,6 @@ import (
 func API(e *echo.Echo) {
 	route := e.Group("/api/v1/")
 
-	service := services.NewService()
-	route.GET("products", service.List)
+	product := services.NewProductService()
+	route.GET("products/:code", product.Retrieve)
 }
