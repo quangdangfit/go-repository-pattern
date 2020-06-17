@@ -1,6 +1,9 @@
 package services
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+	"go-repository-pattern/repositories"
+)
 
 type Service interface {
 	List(c echo.Context) (err error)
@@ -11,6 +14,7 @@ type Service interface {
 }
 
 type service struct {
+	repo repositories.Repository
 }
 
 func NewService() Service {
