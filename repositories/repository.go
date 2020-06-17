@@ -3,7 +3,9 @@ package repositories
 type Repository interface {
 }
 
-type repository struct{}
+type repository struct {
+	CollectionName string
+}
 
 func NewRepository() Repository {
 	return &repository{}
