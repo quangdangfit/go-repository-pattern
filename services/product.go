@@ -12,7 +12,6 @@ type ProductService interface {
 
 type productService struct {
 	service
-
 	repo repositories.ProductRepository
 }
 
@@ -21,6 +20,15 @@ func NewProductService() ProductService {
 	productSer.repo = repositories.NewProductRepository()
 
 	return &productSer
+}
+
+func (p *productService) List(c echo.Context) (err error) {
+	result, err := p.repo.GetProducts()
+	if err != nil {
+		return c.JSON(http.StatusNotFound, nil)
+	}
+
+	return c.JSON(http.StatusOK, &result)
 }
 
 func (p *productService) Retrieve(c echo.Context) (err error) {
