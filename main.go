@@ -10,10 +10,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"transport/lib/utils/logger"
+	"gitlab.com/quangdangfit/gocommon/utils/logger"
 )
-
-//func setupMidlleware()
 
 func main() {
 	e := echo.New()
