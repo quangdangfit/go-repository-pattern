@@ -2,12 +2,13 @@ package dbs
 
 import (
 	"go-repository-pattern/config"
-	db "transport/lib/database"
 
+	db "gitlab.com/quangdangfit/gocommon/database"
+	"gitlab.com/quangdangfit/gocommon/database/mongo"
 	"gopkg.in/mgo.v2"
 )
 
-var Database db.MongoDB
+var Database mongo.MongoDB
 
 const (
 	CollectionProduct = "product"
@@ -15,7 +16,7 @@ const (
 
 func init() {
 	dbConfig := db.DBConfig{
-		MongoDBHosts: config.Config.Database.Host,
+		Hosts:        config.Config.Database.Host,
 		AuthDatabase: "admin",
 		AuthUserName: config.Config.Database.Username,
 		AuthPassword: config.Config.Database.Password,
@@ -24,7 +25,7 @@ func init() {
 		Replica:      config.Config.Database.Replica,
 	}
 
-	Database = db.NewConnection(dbConfig)
+	Database = mongo.New(dbConfig)
 
 	ensureIndex()
 }
