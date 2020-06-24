@@ -9,6 +9,7 @@ import (
 type ProductRepository interface {
 	GetProducts(query bson.M) (*[]models.Product, error)
 	GetProduct(query bson.M) (*models.Product, error)
+	CreateProduct(product *models.Product) error
 }
 
 type productRepository struct {
@@ -40,13 +41,12 @@ func (p *productRepository) GetProduct(query bson.M) (*models.Product, error) {
 	return &product, nil
 }
 
-func (p *productRepository) CreateProduct(payload map[string]interface{}) (*models.Product, error) {
-	var product models.Product
+func (p *productRepository) CreateProduct(product *models.Product) error {
 	product.BeforeCreate()
 
-	err := dbs.Database.InsertOne(dbs.CollectionProduct, payload)
+	err := dbs.Database.InsertOne(dbs.CollectionProduct, product)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &product, nil
+	return nil
 }
