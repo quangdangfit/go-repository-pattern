@@ -7,10 +7,9 @@ import (
 )
 
 type ProductRepository interface {
-	Repository
-
-	GetProducts() (*[]models.Product, error)
-	GetProductByCode(code string) (*models.Product, error)
+	GetProducts(query bson.M) (*[]models.Product, error)
+	GetProduct(query bson.M) (*models.Product, error)
+	CreateProduct(product *models.Product) error
 }
 
 type productRepository struct {
@@ -24,21 +23,30 @@ func NewProductRepository() ProductRepository {
 	return &productRepo
 }
 
-func (p *productRepository) GetProducts() (*[]models.Product, error) {
+func (p *productRepository) GetProducts(query bson.M) (*[]models.Product, error) {
 	var product []models.Product
-	err := dbs.Database.FindMany(dbs.CollectionProduct, nil, "", &product)
+	err := dbs.Database.FindMany(dbs.CollectionProduct, query, "", &product)
 	if err != nil {
 		return nil, err
 	}
 	return &product, nil
 }
 
-func (p *productRepository) GetProductByCode(code string) (*models.Product, error) {
+func (p *productRepository) GetProduct(query bson.M) (*models.Product, error) {
 	var product models.Product
-	query := bson.M{"code": code}
 	err := dbs.Database.FindOne(dbs.CollectionProduct, query, "", &product)
 	if err != nil {
 		return nil, err
 	}
 	return &product, nil
+}
+
+func (p *productRepository) CreateProduct(product *models.Product) error {
+	product.BeforeCreate()
+
+	err := dbs.Database.InsertOne(dbs.CollectionProduct, product)
+	if err != nil {
+		return err
+	}
+	return nil
 }
